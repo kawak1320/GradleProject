@@ -47,7 +47,7 @@ task printFromScript(type: Exec, dependsOn: fatJar) {
     commandLine './print.sh'
 }
 
-task printFromTask(type: Exec, dependsOn: printFromScript) {
+task printFromTask(type: Exec, dependsOn: fatJar) {
     commandLine 'sh'
     args "-c", "java -jar build/libs/GradleProject-1.0-SNAPSHOT.jar > logFromTask.txt"
 }
