@@ -42,12 +42,16 @@ task runJar(type: JavaExec) {
     main="Main"
 }
 
-task printInvoice(type: Exec, dependsOn: fatJar) {
+task printFromScript(type: Exec, dependsOn: fatJar) {
     workingDir '.'
     commandLine './print.sh'
 }
 
+task printFromTask(type: Exec) {
+    commandLine 'sh'
+    args "-c", "java -jar build/libs/GradleProject-1.0-SNAPSHOT.jar > logFromTask.txt"
 
+}
 
 // Testing Tasks
 tasks.register('task1') {
