@@ -1,0 +1,97 @@
+plugins {
+    id 'java'
+}
+
+group 'org.bootcamp'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+//set up smokeTest
+configurations {
+    smokeTest.extendsFrom testImplementation
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    smokeTest 'org.apache.httpcomponents.httpclient:4.5.5'
+
+    // https://mvnrepository.com/artifact/joda-time/joda-time
+    // Injected to select in Main.class joda import instead of Java's
+    implementation group: 'joda-time', name: 'joda-time', version: '2.10.14'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task fatJar(type: Jar) {
+    manifest.attributes 'Main-Class': 'Main'
+    archivesBaseName = "${rootProject.name}"
+    from { configurations.compileClasspath.collect {it.isDirectory() ? it : zipTree(it)} }
+    with jar
+}
+
+task runJar(type: JavaExec) {
+    classpath = files('build/libs/GradleProject-1.0-SNAPSHOT.jar')
+    classpath += sourceSets.main.runtimeClasspath
+    main="Main"
+}
+
+task printInvoice(type: Exec, dependsOn: fatJar) {
+    workingDir '.'
+    commandLine './print.sh'
+}
+
+
+
+// Testing Tasks
+tasks.register('task1') {
+    doLast {
+        println('Hello Gradle!')
+    }
+}
+
+tasks.register('task2') {
+    doLast {
+        //initialize a variable
+        String name = 'Martin'
+
+        //iterate string and print
+        name.each() {
+            println "${it}"
+        }
+
+        //print and concatenate methods
+        println "Hello ${name.toUpperCase()}"
+    }
+}
+
+//Nesting tasks
+tasks.register('initialize') {
+    dependsOn << tasks.task1
+    doLast {
+        println "initializing..."
+    }
+}
+
+//Nesting tasks
+//another way to write same behaviour
+task initialize2(dependsOn: task1) {
+    doLast{
+        println "continue"
+    }
+}
+
+//commands
+//
+//gradle build
+//gradle -d task1
+//gradle tasks //tasks listed
+//gradle tasks --all  //all + my tasks listed
+//gradle build --console=verbose //prints all actions in verbose mode
+// ./gradlew //better way to build gradle (wrapper is faster, for example)
