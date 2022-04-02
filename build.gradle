@@ -50,7 +50,6 @@ task printFromScript(type: Exec, dependsOn: fatJar) {
 task printFromTask(type: Exec) {
     commandLine 'sh'
     args "-c", "java -jar build/libs/GradleProject-1.0-SNAPSHOT.jar > logFromTask.txt"
-
 }
 
 // Testing Tasks
@@ -91,11 +90,13 @@ task initialize2(dependsOn: task1) {
     }
 }
 
-//commands
+//commands using gradle or wrapper
+//
+//Using wrapper ./gradlew
 //
 //gradle build
 //gradle -d task1
 //gradle tasks //tasks listed
 //gradle tasks --all  //all + my tasks listed
 //gradle build --console=verbose //prints all actions in verbose mode
-// ./gradlew //better way to build gradle (wrapper is faster, for example)
+//
